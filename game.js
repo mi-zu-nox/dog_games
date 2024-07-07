@@ -36,7 +36,7 @@ const init = async () => {
     let playerX = WIDTH / 2 - playerImages[0].width / 2;
     const playerY = 400;
     let playerIndex = 0;
-    const playerSpeed = 5;
+    const playerSpeed = 2;
     const nikuList = [];
     const nikuSpeed = 5;
 
