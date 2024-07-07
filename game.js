@@ -1,5 +1,5 @@
 // 画像のパス
-const IMAGE_PATH = "./images";
+const IMAGE_PATH = ".";  
 
 // 画面の幅と高さ
 const WIDTH = 800, HEIGHT = 600;
@@ -19,15 +19,15 @@ const loadImage = (src) => {
 
 // ゲームの初期化
 const init = async () => {
-    const background = await loadImage(`${IMAGE_PATH}/background2.png`);
+    const background = await loadImage(`${IMAGE_PATH}/images/background2.png`);
     const playerImages = [
-        await loadImage(`${IMAGE_PATH}/dog1.png`),
-        await loadImage(`${IMAGE_PATH}/dog2.png`)
+        await loadImage(`${IMAGE_PATH}/images/dog1.png`),
+        await loadImage(`${IMAGE_PATH}/images/dog2.png`)
     ];
-    const leftButtonImg = await loadImage(`${IMAGE_PATH}/left1.png`);
-    const rightButtonImg = await loadImage(`${IMAGE_PATH}/right1.png`);
-    const nikuImg = await loadImage(`${IMAGE_PATH}/niku.png`);
-    const heartImg = await loadImage(`${IMAGE_PATH}/heart1.png`);
+    const leftButtonImg = await loadImage(`${IMAGE_PATH}/images/left1.png`);
+    const rightButtonImg = await loadImage(`${IMAGE_PATH}/images/right1.png`);
+    const nikuImg = await loadImage(`${IMAGE_PATH}/images/niku.png`);
+    const heartImg = await loadImage(`${IMAGE_PATH}/images/heart1.png`);
 
     // プレイヤーの初期位置と設定
     let playerX = WIDTH / 2 - playerImages[0].width / 2;
