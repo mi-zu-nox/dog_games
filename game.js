@@ -1,5 +1,5 @@
 // 画像のパス
-const IMAGE_PATH = "/images";
+const IMAGE_PATH = "./images";
 
 // 画面の幅と高さ
 const WIDTH = 800, HEIGHT = 600;
