@@ -17,6 +17,9 @@ const loadImage = (src) => {
     });
 };
 
+// グローバル変数として追加
+let lastNikuTime = 0;
+
 // ゲームの初期化
 const init = async () => {
     const background = await loadImage(`${IMAGE_PATH}/images/background2.png`);
@@ -33,7 +36,7 @@ const init = async () => {
     let playerX = WIDTH / 2 - playerImages[0].width / 2;
     const playerY = 400;
     let playerIndex = 0;
-    const playerSpeed = 10;
+    const playerSpeed = 5;
     const nikuList = [];
     const nikuSpeed = 5;
 
@@ -78,11 +81,19 @@ const init = async () => {
         }
 
         // 一定時間ごとにランダムな位置から niku.png を落とす
-        if (nikuList.length < 3 && Math.random() < 0.05) {
-            const nikuX = Math.random() * (WIDTH - nikuImg.width);
-            const nikuY = 0;
-            nikuList.push({ x: nikuX, y: nikuY });
+        const currentTime = Date.now();
+        if (nikuList.length < 3 && currentTime - lastNikuTime > 2000) {
+            if (Math.random() < 0.5) {
+                const nikuX = Math.random() * (WIDTH - nikuImg.width);
+                const nikuY = 0;
+                nikuList.push({ x: nikuX, y: nikuY });
+                lastNikuTime = currentTime;
+            }
         }
+
+        console.log('Current niku count:', nikuList.length);
+        console.log('Time since last niku:', currentTime - lastNikuTime);
+
 
         // niku.png の落下処理
         for (let i = 0; i < nikuList.length; i++) {
