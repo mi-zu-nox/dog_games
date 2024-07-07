@@ -25,8 +25,8 @@ const nikuInterval = 2000; // 2秒ごとに生成
 const init = async () => {
     const background = await loadImage(`${IMAGE_PATH}/images/background2.png`);
     const playerImages = [
-        await loadImage(`${IMAGE_PATH}/images/dog1.png`),
-        await loadImage(`${IMAGE_PATH}/images/dog2.png`)
+        await loadImage(`${IMAGE_PATH}/images/dog2.png`),
+        await loadImage(`${IMAGE_PATH}/images/dog1.png`)
     ];
     const leftButtonImg = await loadImage(`${IMAGE_PATH}/images/left1.png`);
     const rightButtonImg = await loadImage(`${IMAGE_PATH}/images/right1.png`);
