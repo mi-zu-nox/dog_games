@@ -19,6 +19,7 @@ const loadImage = (src) => {
 
 // グローバル変数として追加
 let lastNikuTime = 0;
+const nikuInterval = 2000; // 2秒ごとに生成
 
 // ゲームの初期化
 const init = async () => {
@@ -53,6 +54,13 @@ const init = async () => {
     let moveRight = false;
     let facingRight = true;
 
+    // niku.pngを生成する関数
+    function createNiku() {
+        const nikuX = Math.random() * (WIDTH - nikuImg.width);
+        const nikuY = 0;
+        nikuList.push({ x: nikuX, y: nikuY });
+    }
+
     // メインループ
     const gameLoop = () => {
         // 背景の描画
@@ -80,26 +88,29 @@ const init = async () => {
             playerIndex = 0;
         }
 
-        // 一定時間ごとにランダムな位置から niku.png を落とす
+        // niku.pngの生成
         const currentTime = Date.now();
-        if (nikuList.length < 3 && currentTime - lastNikuTime > 2000) {
-            if (Math.random() < 0.5) {
-                const nikuX = Math.random() * (WIDTH - nikuImg.width);
-                const nikuY = 0;
-                nikuList.push({ x: nikuX, y: nikuY });
-                lastNikuTime = currentTime;
-            }
+        if (currentTime - lastNikuTime > nikuInterval) {
+            createNiku();
+            lastNikuTime = currentTime;
         }
 
-        console.log('Current niku count:', nikuList.length);
-        console.log('Time since last niku:', currentTime - lastNikuTime);
-
+        // 画面上のniku.pngが3未満の場合、即座に新しいものを生成
+        while (nikuList.length < 3) {
+            createNiku();
+        }
 
         // niku.png の落下処理
-        for (let i = 0; i < nikuList.length; i++) {
+        for (let i = nikuList.length - 1; i >= 0; i--) {
             const niku = nikuList[i];
             niku.y += nikuSpeed;
             ctx.drawImage(nikuImg, niku.x, niku.y);
+
+            // 画面外に出たniku.pngを削除
+            if (niku.y > HEIGHT) {
+                nikuList.splice(i, 1);
+                continue;
+            }
 
             // プレイヤーと niku.png の衝突判定
             if (niku.y >= playerY - nikuImg.height &&
