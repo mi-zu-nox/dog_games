@@ -131,13 +131,13 @@ const init = async () => {
 
         // プレイヤーの描画
         let playerImg = playerImages[playerIndex];
-        if (!facingRight) {
-            ctx.save();
-            ctx.scale(-1, 1);
-            ctx.drawImage(playerImg, -playerX - playerImg.width, playerY);
-            ctx.restore();
+        if (facingRight) {
+           ctx.drawImage(playerImg, playerX, playerY);
         } else {
-            ctx.drawImage(playerImg, playerX, playerY);
+           ctx.save();
+           ctx.scale(-1, 1);
+           ctx.drawImage(playerImg, -playerX - playerImg.width, playerY);
+           ctx.restore();
         }
 
         // left.png と right.png の描画
