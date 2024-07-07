@@ -126,7 +126,7 @@ const init = async () => {
         // heart.png の表示
         if (heartTimer > 0) {
             ctx.drawImage(heartImg, playerX + playerImages[playerIndex].width - heartImg.width + 10, playerY, heartImg.width / 10, heartImg.height / 10);
-            heartTimer = 10;
+            heartTimer = 2;
         }
 
         // プレイヤーの描画
