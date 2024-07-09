@@ -52,7 +52,7 @@ const init = async () => {
     let heartTimer = 0;
     let moveLeft = false;
     let moveRight = false;
-    let facingRight = true;
+    let facingRight = false;  // 初期値を false に変更
 
     // niku.pngを生成する関数
     function createNiku() {
@@ -130,16 +130,15 @@ const init = async () => {
             heartTimer --;
         }
 
-        // プレイヤーの描画
+        // プレイヤーの描画（修正箇所）
         let playerImg = playerImages[playerIndex];
+        ctx.save();
         if (facingRight) {
-            ctx.drawImage(playerImg, playerX, playerY);
-        } else {
-            ctx.save();
             ctx.scale(-1, 1);
-            ctx.drawImage(playerImg, -playerX - playerImg.width, playerY);
-            ctx.restore();
+            ctx.translate(-WIDTH, 0);
         }
+        ctx.drawImage(playerImg, facingRight ? WIDTH - playerX - playerImg.width : playerX, playerY);
+        ctx.restore();
 
         // left.png と right.png の描画
         ctx.drawImage(leftButtonImg, leftButtonX, leftButtonY, newButtonWidth, newButtonHeight);
