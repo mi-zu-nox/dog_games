@@ -69,9 +69,10 @@ const init = async () => {
         // プレイヤーの移動と向きの設定
         if (moveLeft) {
             playerX -= playerSpeed;
-        }
-        if (moveRight) {
+            facingRight = false;
+        } else if (moveRight) {
             playerX += playerSpeed;
+            facingRight = true;
         }
 
         // プレイヤーアイコンが画面外に出ないように制御
@@ -156,20 +157,20 @@ const init = async () => {
         if (mouseX > leftButtonX && mouseX < leftButtonX + newButtonWidth &&
             mouseY > leftButtonY && mouseY < leftButtonY + newButtonHeight) {
             moveLeft = true;
-            moveRight = false;  // 追加
+            moveRight = false;
             facingRight = false;
         } else if (mouseX > rightButtonX && mouseX < rightButtonX + newButtonWidth &&
             mouseY > rightButtonY && mouseY < rightButtonY + newButtonHeight) {
             moveRight = true;
-            moveLeft = false;  // 追加
-        facingRight = true;
-    }
-});
+            moveLeft = false;
+            facingRight = true;
+        }
+    });
 
-canvas.addEventListener('mouseup', () => {
-    moveLeft = false;
-    moveRight = false;
-});
+    canvas.addEventListener('mouseup', () => {
+        moveLeft = false;
+        moveRight = false;
+    });
 
     gameLoop();
 };
