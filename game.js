@@ -8,6 +8,11 @@ const WIDTH = 800, HEIGHT = 600;
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
+// スケーリング用の変数
+let scale;
+let offsetX;
+let offsetY;
+
 // 画像の読み込み
 const loadImage = (src) => {
     return new Promise((resolve) => {
@@ -52,7 +57,27 @@ const init = async () => {
     let heartTimer = 0;
     let moveLeft = false;
     let moveRight = false;
-    let facingRight = false;  // 初期値を false に変更
+    let facingRight = false;
+
+    // スケーリングの設定
+    function setScale() {
+        const windowWidth = window.innerWidth;
+        const windowHeight = window.innerHeight;
+        scale = Math.min(windowWidth / WIDTH, windowHeight / HEIGHT);
+        canvas.width = WIDTH * scale;
+        canvas.height = HEIGHT * scale;
+        offsetX = (windowWidth - canvas.width) / 2;
+        offsetY = (windowHeight - canvas.height) / 2;
+        canvas.style.position = 'absolute';
+        canvas.style.left = `${offsetX}px`;
+        canvas.style.top = `${offsetY}px`;
+    }
+
+    // 初期スケール設定
+    setScale();
+
+    // ウィンドウリサイズ時にスケールを再設定
+    window.addEventListener('resize', setScale);
 
     // niku.pngを生成する関数
     function createNiku() {
@@ -63,6 +88,9 @@ const init = async () => {
 
     // メインループ
     const gameLoop = () => {
+        ctx.save();
+        ctx.scale(scale, scale);
+
         // 背景の描画
         ctx.drawImage(background, 0, 0, WIDTH, HEIGHT);
 
@@ -130,7 +158,7 @@ const init = async () => {
             heartTimer --;
         }
 
-        // プレイヤーの描画（修正箇所）
+        // プレイヤーの描画
         let playerImg = playerImages[playerIndex];
         ctx.save();
         if (facingRight) {
@@ -144,32 +172,45 @@ const init = async () => {
         ctx.drawImage(leftButtonImg, leftButtonX, leftButtonY, newButtonWidth, newButtonHeight);
         ctx.drawImage(rightButtonImg, rightButtonX, rightButtonY, newButtonWidth, newButtonHeight);
 
+        ctx.restore();
         requestAnimationFrame(gameLoop);
     };
 
     // イベント処理
-    canvas.addEventListener('mousedown', (event) => {
-        const rect = canvas.getBoundingClientRect();
-        const mouseX = event.clientX - rect.left;
-        const mouseY = event.clientY - rect.top;
+    function handleInput(x, y) {
+        const scaledX = (x - offsetX) / scale;
+        const scaledY = (y - offsetY) / scale;
 
-        if (mouseX > leftButtonX && mouseX < leftButtonX + newButtonWidth &&
-            mouseY > leftButtonY && mouseY < leftButtonY + newButtonHeight) {
+        if (scaledX > leftButtonX && scaledX < leftButtonX + newButtonWidth &&
+            scaledY > leftButtonY && scaledY < leftButtonY + newButtonHeight) {
             moveLeft = true;
             moveRight = false;
             facingRight = false;
-        } else if (mouseX > rightButtonX && mouseX < rightButtonX + newButtonWidth &&
-            mouseY > rightButtonY && mouseY < rightButtonY + newButtonHeight) {
+        } else if (scaledX > rightButtonX && scaledX < rightButtonX + newButtonWidth &&
+            scaledY > rightButtonY && scaledY < rightButtonY + newButtonHeight) {
             moveRight = true;
             moveLeft = false;
             facingRight = true;
         }
+    }
+
+    canvas.addEventListener('mousedown', (event) => {
+        handleInput(event.clientX, event.clientY);
     });
 
-    canvas.addEventListener('mouseup', () => {
+    canvas.addEventListener('touchstart', (event) => {
+        event.preventDefault();
+        const touch = event.touches[0];
+        handleInput(touch.clientX, touch.clientY);
+    });
+
+    function stopMovement() {
         moveLeft = false;
         moveRight = false;
-    });
+    }
+
+    canvas.addEventListener('mouseup', stopMovement);
+    canvas.addEventListener('touchend', stopMovement);
 
     gameLoop();
 };
