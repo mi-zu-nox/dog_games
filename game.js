@@ -156,11 +156,11 @@ const init = async () => {
         if (mouseX > leftButtonX && mouseX < leftButtonX + newButtonWidth &&
             mouseY > leftButtonY && mouseY < leftButtonY + newButtonHeight) {
             moveLeft = true;
-            facingRight = false;
+            facingRight = false;  // 左ボタンを押したときは左を向く
         } else if (mouseX > rightButtonX && mouseX < rightButtonX + newButtonWidth &&
             mouseY > rightButtonY && mouseY < rightButtonY + newButtonHeight) {
             moveRight = true;
-            facingRight = true;
+            facingRight = true;  // 右ボタンを押したときは右を向く
         }
     });
 
