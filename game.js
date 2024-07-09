@@ -42,9 +42,9 @@ const init = async () => {
     let playerX = WIDTH / 2 - playerImages[0].width / 2;
     const playerY = 400;
     let playerIndex = 0;
-    const playerSpeed = 2;
+    const playerSpeed = 120; // 1秒あたりの移動ピクセル数
     const nikuList = [];
-    const nikuSpeed = 5;
+    const nikuSpeed = 300; // 1秒あたりの落下ピクセル数
 
     // ボタンの位置とサイズ
     const newButtonWidth = 50;
@@ -86,20 +86,28 @@ const init = async () => {
         nikuList.push({ x: nikuX, y: nikuY });
     }
 
+    let lastTime = 0;
+    const targetFPS = 60;
+    const timeStep = 1000 / targetFPS;
+
     // メインループ
-    const gameLoop = () => {
+    const gameLoop = (currentTime) => {
         ctx.save();
         ctx.scale(scale, scale);
+
+        // 経過時間の計算
+        const deltaTime = (currentTime - lastTime) / 1000; // 秒単位に変換
+        lastTime = currentTime;
 
         // 背景の描画
         ctx.drawImage(background, 0, 0, WIDTH, HEIGHT);
 
         // プレイヤーの移動と向きの設定
         if (moveLeft) {
-            playerX -= playerSpeed;
+            playerX -= playerSpeed * deltaTime;
             facingRight = false;
         } else if (moveRight) {
-            playerX += playerSpeed;
+            playerX += playerSpeed * deltaTime;
             facingRight = true;
         }
 
@@ -112,13 +120,12 @@ const init = async () => {
 
         // プレイヤーのアニメーション
         if (moveLeft || moveRight) {
-            playerIndex = (playerIndex + 1) % playerImages.length;
+            playerIndex = Math.floor(currentTime / 100) % playerImages.length;
         } else {
             playerIndex = 0;
         }
 
         // niku.pngの生成
-        const currentTime = Date.now();
         if (currentTime - lastNikuTime > nikuInterval) {
             createNiku();
             lastNikuTime = currentTime;
@@ -132,7 +139,7 @@ const init = async () => {
         // niku.png の落下処理
         for (let i = nikuList.length - 1; i >= 0; i--) {
             const niku = nikuList[i];
-            niku.y += nikuSpeed;
+            niku.y += nikuSpeed * deltaTime;
             ctx.drawImage(nikuImg, niku.x, niku.y);
 
             // 画面外に出たniku.pngを削除
@@ -212,7 +219,7 @@ const init = async () => {
     canvas.addEventListener('mouseup', stopMovement);
     canvas.addEventListener('touchend', stopMovement);
 
-    gameLoop();
+    gameLoop(0);
 };
 
 init();
