@@ -132,12 +132,12 @@ const init = async () => {
         // プレイヤーの描画
         let playerImg = playerImages[playerIndex];
         if (facingRight) {
-           ctx.drawImage(playerImg, playerX, playerY);
+            ctx.drawImage(playerImg, playerX, playerY);
         } else {
-           ctx.save();
-           ctx.scale(-1, 1);
-           ctx.drawImage(playerImg, -playerX - playerImg.width, playerY);
-           ctx.restore();
+            ctx.save();
+            ctx.scale(-1, 1);
+            ctx.drawImage(playerImg, -playerX - playerImg.width, playerY);
+            ctx.restore();
         }
 
         // left.png と right.png の描画
@@ -156,27 +156,20 @@ const init = async () => {
         if (mouseX > leftButtonX && mouseX < leftButtonX + newButtonWidth &&
             mouseY > leftButtonY && mouseY < leftButtonY + newButtonHeight) {
             moveLeft = true;
-            facingRight = false;  // 左ボタンを押したときは左を向く
+            moveRight = false;  // 追加
+            facingRight = false;
         } else if (mouseX > rightButtonX && mouseX < rightButtonX + newButtonWidth &&
             mouseY > rightButtonY && mouseY < rightButtonY + newButtonHeight) {
             moveRight = true;
-            facingRight = true;  // 右ボタンを押したときは右を向く
-        }
-    });
+            moveLeft = false;  // 追加
+        facingRight = true;
+    }
+});
 
-    canvas.addEventListener('mouseup', (event) => {
-        const rect = canvas.getBoundingClientRect();
-        const mouseX = event.clientX - rect.left;
-        const mouseY = event.clientY - rect.top;
-
-        if (mouseX > leftButtonX && mouseX < leftButtonX + newButtonWidth &&
-            mouseY > leftButtonY && mouseY < leftButtonY + newButtonHeight) {
-            moveLeft = false;
-        } else if (mouseX > rightButtonX && mouseX < rightButtonX + newButtonWidth &&
-            mouseY > rightButtonY && mouseY < rightButtonY + newButtonHeight) {
-            moveRight = false;
-        }
-    });
+canvas.addEventListener('mouseup', () => {
+    moveLeft = false;
+    moveRight = false;
+});
 
     gameLoop();
 };
